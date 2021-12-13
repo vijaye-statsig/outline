@@ -71,6 +71,15 @@ router.post("email", errorHandling(), async (ctx) => {
       );
     }
 
+    if (
+      user.email &&
+      process.env.ALLOWED_DOMAINS &&
+      !user.email.endsWith("@" + process.env.ALLOWED_DOMAINS)
+    ) {
+      ctx.redirect(`/?notice=auth-error`);
+      return;
+    }
+
     if (!team) {
       team = await Team.scope("withAuthenticationProviders").findByPk(
         user.teamId

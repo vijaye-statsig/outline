@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import Oy from "oy-vey";
+import * as postmark from "postmark";
+
 import * as React from "react";
 import {
   Props as CollectionNotificationEmailT,
@@ -71,32 +73,33 @@ export class Mailer {
 
   async loadTransport() {
     if (process.env.SMTP_HOST) {
-      const smtpConfig = {
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure:
-          "SMTP_SECURE" in process.env
-            ? process.env.SMTP_SECURE === "true"
-            : process.env.NODE_ENV === "production",
-        auth: undefined,
-        tls:
-          "SMTP_TLS_CIPHERS" in process.env
-            ? {
-                ciphers: process.env.SMTP_TLS_CIPHERS,
-              }
-            : undefined,
-      };
+      // const smtpConfig = {
+      //   host: process.env.SMTP_HOST,
+      //   port: process.env.SMTP_PORT,
+      //   secure:
+      //     "SMTP_SECURE" in process.env
+      //       ? process.env.SMTP_SECURE === "true"
+      //       : process.env.NODE_ENV === "production",
+      //   auth: undefined,
+      //   tls:
+      //     "SMTP_TLS_CIPHERS" in process.env
+      //       ? {
+      //           ciphers: process.env.SMTP_TLS_CIPHERS,
+      //         }
+      //       : undefined,
+      // };
 
-      if (process.env.SMTP_USERNAME) {
-        // @ts-expect-error ts-migrate(2322) FIXME: Type '{ user: string; pass: string | undefined; }'... Remove this comment to see the full error message
-        smtpConfig.auth = {
-          user: process.env.SMTP_USERNAME,
-          pass: process.env.SMTP_PASSWORD,
-        };
-      }
+      // if (process.env.SMTP_USERNAME) {
+      //   // @ts-expect-error ts-migrate(2322) FIXME: Type '{ user: string; pass: string | undefined; }'... Remove this comment to see the full error message
+      //   smtpConfig.auth = {
+      //     user: process.env.SMTP_USERNAME,
+      //     pass: process.env.SMTP_PASSWORD,
+      //   };
+      // }
 
       // @ts-expect-error config
-      this.transporter = nodemailer.createTransport(smtpConfig);
+      // this.transporter = nodemailer.createTransport(smtpConfig);
+      this.transporter = new postmark.ServerClient(process.env.SMTP_HOST);
       return;
     }
 
@@ -140,12 +143,12 @@ export class Mailer {
       try {
         Logger.info("email", `Sending email "${data.title}" to ${data.to}`);
         const info = await transporter.sendMail({
-          from: process.env.SMTP_FROM_EMAIL,
-          replyTo: process.env.SMTP_REPLY_EMAIL || process.env.SMTP_FROM_EMAIL,
-          to: data.to,
-          subject: data.title,
-          html: html,
-          text: data.text,
+          From: process.env.SMTP_FROM_EMAIL,
+          ReplyTo: process.env.SMTP_REPLY_EMAIL || process.env.SMTP_FROM_EMAIL,
+          To: data.to,
+          Subject: data.title,
+          HtmlBody: html,
+          TextBody: data.text,
         });
 
         if (useTestEmailService) {
