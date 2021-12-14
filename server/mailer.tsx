@@ -142,7 +142,7 @@ export class Mailer {
 
       try {
         Logger.info("email", `Sending email "${data.title}" to ${data.to}`);
-        const info = await transporter.sendMail({
+        const info = await transporter.sendEmail({
           From: process.env.SMTP_FROM_EMAIL,
           ReplyTo: process.env.SMTP_REPLY_EMAIL || process.env.SMTP_FROM_EMAIL,
           To: data.to,
