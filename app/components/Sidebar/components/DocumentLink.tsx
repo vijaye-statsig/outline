@@ -339,6 +339,7 @@ function DocumentLink(
 
 const Relative = styled.div`
   position: relative;
+  margin-left: 8px;
 `;
 
 const Draggable = styled.div<{ $isDragging?: boolean; $isMoving?: boolean }>`
