@@ -1,4 +1,5 @@
 import { observer } from "mobx-react";
+import { DocumentIcon } from "outline-icons";
 import * as React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { useTranslation } from "react-i18next";
@@ -273,12 +274,12 @@ function DocumentLink(
                 }}
                 label={
                   <>
-                    {hasChildDocuments && (
+                    {/* {hasChildDocuments && (
                       <Disclosure
                         expanded={expanded && !isDragging}
                         onClick={handleDisclosureClick}
                       />
-                    )}
+                    )} */}
                     <EditableTitle
                       title={title}
                       onSubmit={handleTitleChange}
@@ -292,12 +293,13 @@ function DocumentLink(
                   !!match && location.search !== "?starred"
                 }
                 isActiveDrop={isOverReparent && canDropToReparent}
-                depth={depth}
+                depth={depth - 1}
                 exact={false}
                 showActions={menuOpen}
                 scrollIntoViewIfNeeded={!document?.isStarred}
                 isDraft={isDraft}
                 ref={ref}
+                icon={<DocumentIcon />}
                 menu={
                   document && !isMoving && !isEditing ? (
                     <Fade>
@@ -339,7 +341,6 @@ function DocumentLink(
 
 const Relative = styled.div`
   position: relative;
-  margin-left: 8px;
 `;
 
 const Draggable = styled.div<{ $isDragging?: boolean; $isMoving?: boolean }>`

@@ -85,7 +85,7 @@ function Collections() {
           belowCollection={orderedCollections[index + 1]}
         />
       ))}
-      <SidebarAction action={createCollection} depth={0.5} />
+      <SidebarAction action={createCollection} depth={0} />
     </>
   );
 

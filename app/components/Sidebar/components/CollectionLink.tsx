@@ -231,7 +231,7 @@ function CollectionLink({
                 />
               }
               exact={false}
-              depth={0.5}
+              depth={0}
               menu={
                 !isEditing && (
                   <>
